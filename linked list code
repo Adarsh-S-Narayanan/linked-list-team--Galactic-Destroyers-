@@ -1,0 +1,80 @@
+class Node:
+    """Node class for the linked list"""
+    def __init__(self, roll_number):
+        self.roll_number = roll_number
+        self.next = None
+
+class LinkedList:
+    """Linked List class to manage roll numbers"""
+    def __init__(self):
+        self.head = None
+    
+    def insert(self, roll_number):
+        """Insert a new roll number at the end of the list"""
+        new_node = Node(roll_number)
+        
+        # If list is empty, make new node the head
+        if not self.head:
+            self.head = new_node
+            return
+        
+        # Traverse to the end and insert
+        current = self.head
+        while current.next:
+            current = current.next
+        current.next = new_node
+    
+    def display(self):
+        """Display the linked list in the required format"""
+        if not self.head:
+            print("Roll Numbers in Linked List: Empty")
+            return
+        
+        roll_numbers = []
+        current = self.head
+        
+        # Collect all roll numbers
+        while current:
+            roll_numbers.append(str(current.roll_number))
+            current = current.next
+        
+        # Display in the required format
+        print("Roll Numbers in Linked List: " + " → ".join(roll_numbers))
+
+def main():
+    # Create linked list instance
+    roll_list = LinkedList()
+    
+    # My roll number (example)
+    my_roll = 2023001
+    print(f"Inserting my roll number: {my_roll}")
+    roll_list.insert(my_roll)
+    
+    # Team members' roll numbers (example)
+    team_members = [2023002, 2023003, 2023004, 2023005]
+    
+    print("\nInserting team members' roll numbers:")
+    for roll in team_members:
+        print(f"Inserting: {roll}")
+        roll_list.insert(roll)
+    
+    print("\nFinal linked list:")
+    roll_list.display()
+    
+    # Additional demonstration: show step-by-step insertion
+    print("\n" + "="*50)
+    print("Step-by-step demonstration:")
+    print("="*50)
+    
+    # Create a new list for step-by-step demo
+    demo_list = LinkedList()
+    all_rolls = [my_roll] + team_members
+    
+    for i, roll in enumerate(all_rolls, 1):
+        demo_list.insert(roll)
+        print(f"Step {i}: After inserting {roll}")
+        demo_list.display()
+        print()
+
+if __name__ == "__main__":
+    main()
