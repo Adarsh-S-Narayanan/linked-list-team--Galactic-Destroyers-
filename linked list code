@@ -1,80 +1,106 @@
-class Node:
-    """Node class for the linked list"""
-    def __init__(self, roll_number):
-        self.roll_number = roll_number
-        self.next = None
+#include <stdio.h>
+#include <stdlib.h>
 
-class LinkedList:
-    """Linked List class to manage roll numbers"""
-    def __init__(self):
-        self.head = None
-    
-    def insert(self, roll_number):
-        """Insert a new roll number at the end of the list"""
-        new_node = Node(roll_number)
-        
-        # If list is empty, make new node the head
-        if not self.head:
-            self.head = new_node
-            return
-        
-        # Traverse to the end and insert
-        current = self.head
-        while current.next:
-            current = current.next
-        current.next = new_node
-    
-    def display(self):
-        """Display the linked list in the required format"""
-        if not self.head:
-            print("Roll Numbers in Linked List: Empty")
-            return
-        
-        roll_numbers = []
-        current = self.head
-        
-        # Collect all roll numbers
-        while current:
-            roll_numbers.append(str(current.roll_number))
-            current = current.next
-        
-        # Display in the required format
-        print("Roll Numbers in Linked List: " + " → ".join(roll_numbers))
+// Structure for a node in the linked list
+struct Node {
+    int rollNumber;
+    struct Node* next;
+};
 
-def main():
-    # Create linked list instance
-    roll_list = LinkedList()
-    
-    # My roll number (example)
-    my_roll = 2023001
-    print(f"Inserting my roll number: {my_roll}")
-    roll_list.insert(my_roll)
-    
-    # Team members' roll numbers (example)
-    team_members = [2023002, 2023003, 2023004, 2023005]
-    
-    print("\nInserting team members' roll numbers:")
-    for roll in team_members:
-        print(f"Inserting: {roll}")
-        roll_list.insert(roll)
-    
-    print("\nFinal linked list:")
-    roll_list.display()
-    
-    # Additional demonstration: show step-by-step insertion
-    print("\n" + "="*50)
-    print("Step-by-step demonstration:")
-    print("="*50)
-    
-    # Create a new list for step-by-step demo
-    demo_list = LinkedList()
-    all_rolls = [my_roll] + team_members
-    
-    for i, roll in enumerate(all_rolls, 1):
-        demo_list.insert(roll)
-        print(f"Step {i}: After inserting {roll}")
-        demo_list.display()
-        print()
+// Function to create a new node
+struct Node* createNode(int rollNumber) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Memory allocation failed!\n");
+        exit(1);
+    }
+    newNode->rollNumber = rollNumber;
+    newNode->next = NULL;
+    return newNode;
+}
 
-if __name__ == "__main__":
-    main()
+// Function to insert a node at the end of the linked list
+void insertAtEnd(struct Node** head, int rollNumber) {
+    struct Node* newNode = createNode(rollNumber);
+    
+    // If the list is empty, make the new node the head
+    if (*head == NULL) {
+        *head = newNode;
+        return;
+    }
+    
+    // Traverse to the end of the list
+    struct Node* temp = *head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    
+    // Link the new node at the end
+    temp->next = newNode;
+}
+
+// Function to display the linked list in the required format
+void displayList(struct Node* head) {
+    if (head == NULL) {
+        printf("Roll Numbers in Linked List: Empty list\n");
+        return;
+    }
+    
+    printf("Roll Numbers in Linked List: ");
+    struct Node* temp = head;
+    
+    while (temp != NULL) {
+        printf("%d", temp->rollNumber);
+        if (temp->next != NULL) {
+            printf(" → ");
+        }
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+// Function to free all nodes in the linked list
+void freeList(struct Node* head) {
+    struct Node* temp;
+    while (head != NULL) {
+        temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+int main() {
+    struct Node* head = NULL;
+    int rollNumber;
+    int numMembers;
+    
+    printf("=== Singly Linked List Program ===\n\n");
+    
+    // Insert your roll number as the first node
+    printf("Enter your roll number: ");
+    scanf("%d", &rollNumber);
+    insertAtEnd(&head, rollNumber);
+    printf("Your roll number %d has been added as the first node.\n\n", rollNumber);
+    
+    // Get number of team members
+    printf("Enter the number of team members: ");
+    scanf("%d", &numMembers);
+    
+    // Insert team members' roll numbers
+    if (numMembers > 0) {
+        printf("\nEnter roll numbers of your team members:\n");
+        for (int i = 0; i < numMembers; i++) {
+            printf("Team member %d roll number: ", i + 1);
+            scanf("%d", &rollNumber);
+            insertAtEnd(&head, rollNumber);
+        }
+    }
+    
+    printf("\n=== Final Linked List ===\n");
+    displayList(head);
+    
+    // Free allocated memory
+    freeList(head);
+    
+    return 0;
+}
